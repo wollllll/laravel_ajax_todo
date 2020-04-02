@@ -2,7 +2,6 @@ var tasks = {
     dom: {
         csrfToken: $('meta[name="csrf-token"]').attr('content'),
         storeBtn: $('#store-btn'),
-        storeContent: $('textarea[name="store-content"]'),
         editBtn: $('.edit-btn'),
         updateBtn: $('.update-btn'),
         taskLists: $('#task-lists')
@@ -15,24 +14,20 @@ var tasks = {
                 dataType: 'json',
                 data: {
                     '_token': tasks.dom.csrfToken,
-                    'content': tasks.dom.storeContent.val()
+                    'content': $('textarea[name="store-content"]').val()
                 }
             }).done(function (data) {
-                tasks.dom.taskLists.append()
-            }).fail(function () {
-                alert('保存に失敗しました:(')
+                console.log(data);
+            }).fail(function (data) {
+                tasks.dom.taskLists.append(data.responseText);
+                $('textarea[name="store-content"]').val('');
             });
         },
         _editTask: function (e) {
-            var target = $(e.target);
-            var task = tasks.dom.taskLists.find('#task-list-' + $(target).data('task-id'));
+            var task = tasks.dom.taskLists.find('#task-list-' + $(e.target).data('task-id'));
 
-            task.find('#hide-content').toggle();
-            task.find('#show-content').toggle();
-            task.find('#delete-btn').toggle();
-            task.find('#created-at').toggleClass('offset-3');
-            task.find('#update-btn').toggle();
-            target.toggle();
+            task.find('#show-task').toggle();
+            task.find('#edit-task').toggle();
         },
         _updateTask: function (e) {
             var target = $(e.target);
@@ -49,12 +44,9 @@ var tasks = {
             }).done(function (data) {
                 var task = tasks.dom.taskLists.find('#task-list-' + data.id);
 
-                task.find('#hide-content').toggle();
-                task.find('#show-content').toggle().text(data.content);
-                task.find('#delete-btn').toggle();
-                task.find('#created-at').toggleClass('offset-3');
-                task.find('#update-btn').toggle();
-                task.find('#edit-btn').toggle();
+                task.find('#edit-task').toggle();
+                task.find('#show-task').toggle();
+                task.find('#show-task #content').text(data.content);
             }).fail(function () {
                 alert('更新に失敗しました:(')
             });

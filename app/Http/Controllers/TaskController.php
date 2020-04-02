@@ -19,7 +19,7 @@ class TaskController extends Controller
     {
         $task = $service->store($request);
 
-        return response(view('tasks.test'));
+        return response(view('tasks.list', compact('task')));
     }
 
     public function update(Request $request, Task $task, TaskService $service)
