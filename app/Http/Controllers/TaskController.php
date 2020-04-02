@@ -66,4 +66,16 @@ class TaskController extends Controller
 
         return response($task);
     }
+
+    public function showMore()
+    {
+        $taskLists = [];
+        $tasks = Task::latest()->take(10)->get();
+
+        foreach ($tasks as $task) {
+            $taskLists = view('tasks.list', compact('task'));
+        }
+
+        return response($taskLists);
+    }
 }

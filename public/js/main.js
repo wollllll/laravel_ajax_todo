@@ -3,7 +3,8 @@ var tasks = {
         storeBtn: $('#store-btn'),
         editBtn: $('.edit-btn'),
         updateBtn: $('.update-btn'),
-        deleteBtn: $('.delete-btn')
+        deleteBtn: $('.delete-btn'),
+        showMoreBtn: $('#show-more-btn')
     },
     modules: {
         /**
@@ -89,6 +90,19 @@ var tasks = {
             }).fail(function () {
                 alert('削除に失敗しました:(')
             });
+        },
+        _showMore: function (e) {
+            var target = $(e.target);
+
+            $.ajax({
+                url: target.data('show-more-url'),
+                type: 'GET',
+                dataType: 'json',
+            }).done(function (data) {
+                console.log(data);
+            }).fail(function (data) {
+                $('#task-lists').prepend(data.responseText);
+            });
         }
     },
     init: function () {
@@ -96,6 +110,7 @@ var tasks = {
         tasks.dom.updateBtn.on('click', tasks.modules._updateTask);
         tasks.dom.editBtn.on('click', tasks.modules._editTask);
         tasks.dom.deleteBtn.on('click', tasks.modules._deleteTask);
+        tasks.dom.showMoreBtn.on('click', tasks.modules._showMore);
     }
 };
 
