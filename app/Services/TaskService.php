@@ -42,4 +42,18 @@ class TaskService
             abort(500, $e->getMessage());
         }
     }
+
+    public function delete(Task $task)
+    {
+        try {
+            DB::beginTransaction();
+
+            $task->delete();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            abort(500, $e->getMessage());
+        }
+    }
 }

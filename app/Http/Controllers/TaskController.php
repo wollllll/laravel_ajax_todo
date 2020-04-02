@@ -10,7 +10,7 @@ class TaskController extends Controller
 {
     public function index()
     {
-        $tasks = Task::get();
+        $tasks = Task::latest()->take(10)->get();
 
         return view('tasks.index', compact('tasks'));
     }
@@ -27,5 +27,12 @@ class TaskController extends Controller
         $updatedTask = $service->update($request, $task);
 
         return response($updatedTask);
+    }
+
+    public function destroy(Task $task, TaskService $service)
+    {
+        $service->delete($task);
+
+        return response($task);
     }
 }

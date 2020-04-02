@@ -1,4 +1,4 @@
-<ol id="task-list-{{ $task->id }}" class="col-lg-6 my-1">
+<ol id="task-list-{{ $task->id }}" class="col-lg-6 my-2">
     <div class="card task-content"
          data-modal-content="{{ $task->content }}">
         <div id="show-task" class="card-body">

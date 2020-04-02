@@ -1,10 +1,10 @@
 var tasks = {
     dom: {
-        csrfToken: $('meta[name="csrf-token"]').attr('content'),
+        taskLists: $('#task-lists'),
         storeBtn: $('#store-btn'),
         editBtn: $('.edit-btn'),
         updateBtn: $('.update-btn'),
-        taskLists: $('#task-lists')
+        deleteBtn: $('.delete-btn')
     },
     modules: {
         _storeTask: function () {
@@ -13,13 +13,13 @@ var tasks = {
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    '_token': tasks.dom.csrfToken,
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
                     'content': $('textarea[name="store-content"]').val()
                 }
             }).done(function (data) {
                 console.log(data);
             }).fail(function (data) {
-                tasks.dom.taskLists.append(data.responseText);
+                tasks.dom.taskLists.prepend(data.responseText);
                 $('textarea[name="store-content"]').val('');
             });
         },
@@ -37,7 +37,7 @@ var tasks = {
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    '_token': tasks.dom.csrfToken,
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
                     '_method': 'PUT',
                     'content': target.parents().find($('#content-' + target.data('task-id'))).val()
                 }
@@ -51,17 +51,32 @@ var tasks = {
                 alert('更新に失敗しました:(')
             });
         },
+        _deleteTask: function (e) {
+            var target = $(e.target);
+
+            $.ajax({
+                url: target.data('delete-url'),
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    '_method': 'DELETE',
+                }
+            }).done(function (data) {
+                tasks.dom.taskLists.find('#task-list-' + data.id).remove();
+            }).fail(function () {
+                alert('削除に失敗しました:(')
+            });
+        }
     },
     init: function () {
         tasks.dom.storeBtn.on('click', tasks.modules._storeTask);
         tasks.dom.updateBtn.on('click', tasks.modules._updateTask);
         tasks.dom.editBtn.on('click', tasks.modules._editTask);
+        tasks.dom.deleteBtn.on('click', tasks.modules._deleteTask);
     }
 };
 
 $(function () {
     tasks.init();
 });
-
-
-
