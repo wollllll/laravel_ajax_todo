@@ -1,6 +1,6 @@
-<p>-課題点-</p>
-<ul>
+<p style="font-size: 20px">-課題点-</p>
+<ul style="padding: 0;">
     <li>
-        ・storeするときに、doneではなくfailに入ってくる。
+        storeするときに、doneではなくfailに入ってくる。
     </li>
 </ul>
