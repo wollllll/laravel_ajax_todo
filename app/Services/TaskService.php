@@ -5,10 +5,15 @@ namespace App\Services;
 use App\Task;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class TaskService
 {
+    /**
+     * タスク保存処理
+     *
+     * @param $request
+     * @return mixed
+     */
     public function store($request)
     {
         try {
@@ -20,12 +25,19 @@ class TaskService
 
             DB::commit();
             return $task;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             abort(500, $e->getMessage());
         }
     }
 
+    /**
+     * タスク更新処理
+     *
+     * @param $request
+     * @param Task $task
+     * @return Task
+     */
     public function update($request, Task $task)
     {
         try {
@@ -37,12 +49,17 @@ class TaskService
 
             DB::commit();
             return $task;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             abort(500, $e->getMessage());
         }
     }
 
+    /**
+     * タスク削除処理
+     *
+     * @param Task $task
+     */
     public function delete(Task $task)
     {
         try {
@@ -51,7 +68,7 @@ class TaskService
             $task->delete();
 
             DB::commit();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             abort(500, $e->getMessage());
         }

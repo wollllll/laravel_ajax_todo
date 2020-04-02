@@ -1,12 +1,16 @@
 var tasks = {
     dom: {
-        taskLists: $('#task-lists'),
         storeBtn: $('#store-btn'),
         editBtn: $('.edit-btn'),
         updateBtn: $('.update-btn'),
         deleteBtn: $('.delete-btn')
     },
     modules: {
+        /**
+         * taskController@storeにpostで投げる
+         *
+         * @private
+         */
         _storeTask: function () {
             $.ajax({
                 url: tasks.dom.storeBtn.data('store-url'),
@@ -19,16 +23,28 @@ var tasks = {
             }).done(function (data) {
                 console.log(data);
             }).fail(function (data) {
-                tasks.dom.taskLists.prepend(data.responseText);
+                $('#task-lists').prepend(data.responseText);
                 $('textarea[name="store-content"]').val('');
             });
         },
+        /**
+         * タスク編集画面の表示
+         *
+         * @param e
+         * @private
+         */
         _editTask: function (e) {
-            var task = tasks.dom.taskLists.find('#task-list-' + $(e.target).data('task-id'));
+            var task = $('#task-lists').find('#task-list-' + $(e.target).data('task-id'));
 
             task.find('#show-task').toggle();
             task.find('#edit-task').toggle();
         },
+        /**
+         * taskController@updateにpost(put)で投げる
+         *
+         * @param e
+         * @private
+         */
         _updateTask: function (e) {
             var target = $(e.target);
 
@@ -42,7 +58,7 @@ var tasks = {
                     'content': target.parents().find($('#content-' + target.data('task-id'))).val()
                 }
             }).done(function (data) {
-                var task = tasks.dom.taskLists.find('#task-list-' + data.id);
+                var task = $('#task-lists').find('#task-list-' + data.id);
 
                 task.find('#edit-task').toggle();
                 task.find('#show-task').toggle();
@@ -51,6 +67,12 @@ var tasks = {
                 alert('更新に失敗しました:(')
             });
         },
+        /**
+         * taskController@destroyにpost(delete)で投げる
+         *
+         * @param e
+         * @private
+         */
         _deleteTask: function (e) {
             var target = $(e.target);
 
@@ -63,7 +85,7 @@ var tasks = {
                     '_method': 'DELETE',
                 }
             }).done(function (data) {
-                tasks.dom.taskLists.find('#task-list-' + data.id).remove();
+                $('#task-lists').find('#task-list-' + data.id).remove();
             }).fail(function () {
                 alert('削除に失敗しました:(')
             });
